@@ -40,11 +40,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Clone python source
+      run: git clone --depth 1 --branch ${{ matrix.branch }} https://github.com/python/cpython.git cpython
     - name: Build Python Installer
       run: |
-        git clone --depth 1 --branch ${{ matrix.branch }} https://github.com/python/cpython.git cpython
-        cd cpython\Tools\msi
-        cmd /c buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o "${{ github.workspace }}\dist"
+        buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o "${{ github.workspace }}\dist"
+      shell: cmd
+      working-directory: cpython/Tools/msi
     - name: Show dist
       run: |
         ls -R "${{ github.workspace }}\dist"
