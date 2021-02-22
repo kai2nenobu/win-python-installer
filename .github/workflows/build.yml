@@ -42,6 +42,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Clone python source
       run: git clone --depth 1 --branch ${{ matrix.branch }} https://github.com/python/cpython.git cpython
+    - name: Monkey patch for python 3.6 to install a specific sphinx
+      run: sed --binary -i "s@-m pip install sphinx@-m pip install sphinx==2.2.0@" cpython/Doc/make.bat
+      shell: bash
+      if: ${{ matrix.version == '3.6' }}
     - name: Build Python Installer
       run: |
         buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o "${{ github.workspace }}\dist"
