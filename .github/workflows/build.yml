@@ -30,9 +30,9 @@ jobs:
           os: windows-2019
     steps:
     - uses: actions/checkout@v1
-    - name: 'Show env'
+    - name: Show env
       run: cmd /c set
-    - name: Build Python Installer
+    - name: Build Installer
       run: |
         powershell -NoProfile -File .\ci\build_installer.ps1 `
           -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.branch }}"
