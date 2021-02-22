@@ -1,0 +1,77 @@
+name: Release Python Installer
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  ref:
+    runs-on: ubuntu-20.04
+    outputs:
+      tag: ${{ steps.tag.outputs.TAG }}
+      version: ${{ steps.tag.outputs.VERSION }}
+    steps:
+    - id: tag
+      run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+    - id: version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+  build-2016:
+    runs-on: windows-2016
+    needs: [ref]
+    if: ${{ startswith(needs.ref.outputs.tag, 'v3.6') }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Installer
+      run: |
+        powershell -NoProfile -File .\ci\build_installer.ps1 `
+          -OutDirectory "${{ github.workspace }}\dist" "${{ needs.ref.outputs.tag }}"
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ needs.ref.outputs.tag }}
+        path: |
+          dist/**/python-*-amd64.exe
+  build-2019:
+    runs-on: windows-2019
+    needs: [ref]
+    if: ${{ !startswith(needs.ref.outputs.tag, 'v3.6') }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Installer
+      run: |
+        powershell -NoProfile -File .\ci\build_installer.ps1 `
+          -OutDirectory "${{ github.workspace }}\dist" "${{ needs.ref.outputs.tag }}"
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ needs.ref.outputs.tag }}
+        path: |
+          dist/**/python-*-amd64.exe
+  release:
+    runs-on: ubuntu-20.04
+    needs: [build-2016, build-2019]
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/download-artifact@v2
+      with:
+        name: ${{ needs.ref.outputs.tag }}
+    - run: ls -AlR
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ needs.ref.outputs.tag }}
+        release_name: Python ${{ needs.ref.outputs.version }}
+        body: |
+          Python ${{ needs.ref.outputs.version }} Installer
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ needs.ref.outputs.tag }}/amd64/python-${{ needs.ref.outputs.version }}-amd64.exe
+        asset_name: python-${{ needs.ref.outputs.version }}-amd64.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
