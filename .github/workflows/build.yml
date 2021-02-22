@@ -9,24 +9,37 @@ on:
 jobs:
   build:
     runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - version: '3.6'
+          branch:  '3.6'
+        - version: '3.7'
+          branch:  '3.7'
+        - version: '3.8'
+          branch:  '3.8'
+        - version: '3.9'
+          branch:  '3.9'
+        - version: '3.10'
+          branch:  'master'
     steps:
     - name: 'Show env'
       run: cmd /c set
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: 3.8
     - name: Build Python Installer
       run: |
-        curl.exe -LOJ https://www.python.org/ftp/python/3.7.10/Python-3.7.10.tgz
-        tar.exe xvf Python-3.7.10.tgz
-        cd Python-3.7.10\Tools\msi
+        git clone --depth 1 --branch ${{ matrix.branch }} https://github.com/python/cpython.git cpython
+        cd cpython\Tools\msi
         cmd /c buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o "${{ github.workspace }}\dist"
     - name: Show dist
       run: |
         ls -R "${{ github.workspace }}\dist"
     - uses: actions/upload-artifact@v2
       with:
-        name: 3.7.10
+        name: ${{ matrix.version }}
         path: |
           dist/**/python-*-amd64.exe
