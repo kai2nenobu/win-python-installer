@@ -29,19 +29,13 @@ jobs:
           branch:  'master'
           os: windows-2019
     steps:
+    - uses: actions/checkout@v1
     - name: 'Show env'
       run: cmd /c set
-    - name: Clone python source
-      run: git clone --depth 1 --branch ${{ matrix.branch }} https://github.com/python/cpython.git cpython
-    - name: Monkey patch for python 3.6 to install a specific sphinx
-      run: sed --binary -i "s@-m pip install sphinx@-m pip install sphinx==2.2.0@" cpython/Doc/make.bat
-      shell: bash
-      if: ${{ matrix.version == '3.6' }}
     - name: Build Python Installer
       run: |
-        buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o "${{ github.workspace }}\dist"
-      shell: cmd
-      working-directory: cpython/Tools/msi
+        powershell -NoProfile -File .\ci\build_installer.ps1 `
+          -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.branch }}"
     - name: Show dist
       run: |
         ls -R "${{ github.workspace }}\dist"
