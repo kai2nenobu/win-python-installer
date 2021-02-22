@@ -48,6 +48,7 @@ jobs:
   release:
     runs-on: ubuntu-20.04
     needs: [build-2016, build-2019]
+    if: always()
     steps:
     - uses: actions/checkout@v1
     - uses: actions/download-artifact@v2
