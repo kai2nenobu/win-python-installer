@@ -1,0 +1,27 @@
+name: Build Python Installer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+    - name: 'Show env'
+      run: cmd /c set
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: Build Python Installer
+      run: |
+        curl.exe -LOJ https://www.python.org/ftp/python/3.7.10/Python-3.7.10.tgz
+        tar.exe xvf Python-3.7.10.tgz
+        cd Python-3.7.10\Tools\msi
+        cmd /c buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o "${{ github.workspace }}\dist"
+    - name: Show dist
+      run: |
+        ls -R "${{ github.workspace }}\dist"
