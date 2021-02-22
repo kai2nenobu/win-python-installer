@@ -25,3 +25,8 @@ jobs:
     - name: Show dist
       run: |
         ls -R "${{ github.workspace }}\dist"
+    - uses: actions/upload-artifact@v2
+      with:
+        name: 3.7.10
+        path: |
+          dist/**/python-*-amd64.exe
