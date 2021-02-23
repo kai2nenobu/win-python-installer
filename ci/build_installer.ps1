@@ -15,7 +15,7 @@ if (-not $OutDirectory) {
 
 # Clone source
 git clone --depth 1 --branch $Ref 'https://github.com/python/cpython.git' cpython
-if ($LASTEXITCODE -gt 0) { exit 1 }
+if ($LASTEXITCODE -gt 0) { exit $LASTEXITCODE }
 
 # Monkey patch for python 3.6.x
 if ($Ref.StartsWith('3.6') -or $Ref.StartsWith('v3.6')) {
@@ -27,4 +27,4 @@ if ($Ref.StartsWith('3.6') -or $Ref.StartsWith('v3.6')) {
 
 # Build installer
 cmd /c cpython\Tools\msi\buildrelease.bat -x64 --skip-pgo --skip-nuget --skip-zip -o $OutDirectory
-if ($LASTEXITCODE -gt 0) { exit 1 }
+if ($LASTEXITCODE -gt 0) { exit $LASTEXITCODE }
