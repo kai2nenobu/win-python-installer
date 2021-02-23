@@ -52,9 +52,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: actions/download-artifact@v2
-      with:
-        name: ${{ needs.ref.outputs.tag }}
-    - run: ls -AlR
+    - name: Show downloaded artifacts
+      run: ls -AlR ${{ needs.ref.outputs.tag }}
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
