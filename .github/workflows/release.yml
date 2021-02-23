@@ -10,11 +10,14 @@ jobs:
     outputs:
       tag: ${{ steps.process.outputs.TAG }}
       version: ${{ steps.process.outputs.VERSION }}
+      # GITHUB_REFの数字部分を結合した文字列 (ex: refs/tags/v3.6.13 -> 3613)
+      version-slug: ${{ steps.process.outputs.VERSION_SLUG }}
     steps:
     - id: process
       run: |
         echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
         echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+        echo ::set-output name=VERSION_SLUG::$(echo $GITHUB_REF | grep -o [0-9] | tr -d '\n')
   build-2016:
     runs-on: windows-2016
     needs: [ref]
@@ -60,8 +63,9 @@ jobs:
       with:
         tag_name: ${{ needs.ref.outputs.tag }}
         release_name: Python ${{ needs.ref.outputs.version }}
-        body: |
+        body: >
           Python ${{ needs.ref.outputs.version }} Installer
+          ([Official release page](https://www.python.org/downloads/release/python-${{ needs.ref.outputs.version-slug }}/))
         draft: false
         prerelease: false
       env:
