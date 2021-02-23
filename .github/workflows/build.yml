@@ -3,8 +3,16 @@ name: Build Python Installer
 on:
   push:
     branches: [ main ]
+    paths:
+    - 'ci/**'
+    - '.github/workflows/build.yml'
   pull_request:
     branches: [ main ]
+    paths:
+    - 'ci/**'
+    - '.github/workflows/build.yml'
+  schedule:
+  - cron:  '15 22 * * *'  # once a day
 
 jobs:
   build:
