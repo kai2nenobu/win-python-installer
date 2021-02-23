@@ -8,13 +8,13 @@ jobs:
   ref:
     runs-on: ubuntu-20.04
     outputs:
-      tag: ${{ steps.tag.outputs.TAG }}
-      version: ${{ steps.tag.outputs.VERSION }}
+      tag: ${{ steps.process.outputs.TAG }}
+      version: ${{ steps.process.outputs.VERSION }}
     steps:
-    - id: tag
-      run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
-    - id: version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+    - id: process
+      run: |
+        echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+        echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
   build-2016:
     runs-on: windows-2016
     needs: [ref]
