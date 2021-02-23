@@ -15,6 +15,10 @@
 
 | バージョン       | リリース日 |
 |------------------|------------|
+| [3.7.10][3.7.10] | 2021-02-15 |
+| [3.6.13][3.6.13] | 2021-02-15 |
 | [3.6.12][3.6.12] | 2020-08-17 |
 
+[3.7.10]: https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.7.10
+[3.6.13]: https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.6.13
 [3.6.12]: https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.6.12
