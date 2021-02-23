@@ -47,7 +47,7 @@ jobs:
           dist/**/python-*-amd64.exe
   release:
     runs-on: ubuntu-20.04
-    needs: [build-2016, build-2019]
+    needs: [ref, build-2016, build-2019]
     if: always()
     steps:
     - uses: actions/checkout@v1
