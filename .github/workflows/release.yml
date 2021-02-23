@@ -57,6 +57,13 @@ jobs:
     - uses: actions/download-artifact@v2
     - name: Show downloaded artifacts
       run: ls -AlR ${{ needs.ref.outputs.tag }}
+    - name: VirusTotal scan
+      id: virustotal
+      uses: crazy-max/ghaction-virustotal@v2
+      with:
+        vt_api_key: ${{ secrets.VT_API_KEY }}
+        files: |
+          **/python-*-amd64.exe
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -66,6 +73,8 @@ jobs:
         body: >
           Python ${{ needs.ref.outputs.version }} Installer
           ([Official release page](https://www.python.org/downloads/release/python-${{ needs.ref.outputs.version-slug }}/))
+
+          ${{ steps.virustotal.outputs.analysis }}
         draft: false
         prerelease: false
       env:
