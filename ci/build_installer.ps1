@@ -2,7 +2,7 @@
 [CmdletBinding()]
 Param(
   [Parameter(Position=0)]
-  [string]$Ref='master',
+  [string]$Ref='main',
   [string]$OutDirectory
 )
 
