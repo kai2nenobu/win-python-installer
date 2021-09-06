@@ -3,6 +3,11 @@ name: Release Python Installer
 on:
   push:
     tags: ['v*']
+  workflow_dispatch: # Enable manual trigger
+    inputs:
+      tag_name:
+        description: 'Tag name for python/cpython (ex: "vX.Y.Z")'
+        required: true
 
 jobs:
   ref:
@@ -15,9 +20,14 @@ jobs:
     steps:
     - id: process
       run: |
-        echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
-        echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
-        echo ::set-output name=VERSION_SLUG::$(echo $GITHUB_REF | grep -o [0-9] | tr -d '\n')
+        if [ '${{ github.event_name }}' = 'workflow_dispatch' ]; then
+          ref='refs/tags/${{ github.event.inputs.tag_name }}'
+        else
+          ref=$GITHUB_REF
+        fi
+        echo ::set-output name=TAG::${ref#refs/tags/}
+        echo ::set-output name=VERSION::${ref#refs/tags/v}
+        echo ::set-output name=VERSION_SLUG::$(echo $ref | grep -o [0-9] | tr -d '\n')
   build-2016:
     runs-on: windows-2016
     needs: [ref]
