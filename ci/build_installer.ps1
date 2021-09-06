@@ -29,6 +29,15 @@ if ($Ref.StartsWith('3.6') -or $Ref.StartsWith('v3.6')) {
   $BuildOptions += '--skip-pgo'
 }
 
+# Special operations for version 3.8.12
+if ($Ref -eq 'v3.8.12') {
+  # https://github.com/python/cpython/commit/8c3a10e58b12608c3759fee684e7aa399facae2a
+  'Apply a patch to find libffi correctly.'
+  Push-Location cpython
+  curl.exe -sSL https://github.com/python/cpython/commit/8c3a10e58b12608c3759fee684e7aa399facae2a.patch | git am
+  Pop-Location
+}
+
 # Build installer
 
 cmd /c cpython\Tools\msi\buildrelease.bat @BuildOptions
