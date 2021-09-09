@@ -1,0 +1,26 @@
+name: Check new Python releases
+
+on:
+  workflow_dispatch: # Enable manual trigger
+  schedule:
+  - cron:  '33 0/3 * * *'
+
+jobs:
+  check-release:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install
+      run: sudo apt update && sudo apt install -y xmlstarlet
+    - name: Check new tags
+      id: check_new_tags
+      run: |
+        new_tags=$(./ci/check_new_tags.bash)
+        echo "::set-output name=new_tags::${new_tags}"
+    - name: Create a new issue
+      if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
+      uses: imjohnbo/issue-bot@v3
+      with:
+        title: ✨New release ${{ steps.check_new_tags.outputs.new_tags }}
+        body: |
+          Some new releases are found. See [python tags](https://github.com/python/cpython/tags).
