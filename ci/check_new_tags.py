@@ -33,7 +33,10 @@ class Tag:
     def version_tuple(self) -> tuple[int, int, int, str]:
         regex = r'^v(\d+)\.(\d+)\.(\d+)(.*)$'
         m = re.fullmatch(regex, self.name)
-        return (int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4))
+        if m:
+            return (int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4))
+        else:
+            return (0, 0, 0, '')  # dummy value
 
 
 def extract_tag(entry: ElementTree.Element) -> Tag:
