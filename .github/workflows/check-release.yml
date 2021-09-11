@@ -24,7 +24,10 @@ jobs:
         branch: new_release
         delete-branch: true
         commit-message: Update the latest releases for ${{ steps.check_new_tags.outputs.new_tags }}
-        reviewers: ${{ github.repository_owner }}
+        author: Tsunenobu Kai <kai2nenobu@gmail.com>
+        reviewers: kai2nenobu
+        assignees: kai2nenobu
+        labels: release
         title: ✨New release ${{ steps.check_new_tags.outputs.new_tags }}
         body: |
           Some new releases are found. See [python tags](https://github.com/python/cpython/tags).
