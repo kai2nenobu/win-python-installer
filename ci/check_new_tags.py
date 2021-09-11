@@ -21,6 +21,7 @@ class Tag:
 
     def is_security_version(self) -> bool:
         security_versions = {
+            (3, 9): 12,  # 3.9.12 (Plan in PEP 596)
             (3, 8): 11,  # 3.8.11
             (3, 7): 9,  # 3.7.9
             (3, 6): 9  # 3.6.9
