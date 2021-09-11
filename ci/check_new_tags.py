@@ -67,14 +67,19 @@ def update_readme(tag: Tag):
 
 
 if __name__ == '__main__':
-    tag_feed = 'https://github.com/python/cpython/tags.atom'
-    with urlopen(tag_feed) as res:
-        body = res.read().decode('utf-8')
+    if len(sys.argv) < 2:
+        tag_feed = 'https://github.com/python/cpython/tags.atom'
+        with urlopen(tag_feed) as res:
+            body = res.read().decode('utf-8')
+    else:
+        # Read a feed from a file (for testing purpose)
+        test_feed_file = sys.argv[1]
+        with open(test_feed_file, mode='rt', encoding='utf-8') as f:
+            body = f.read()
     feed = ElementTree.fromstring(body)
     recent_tags = [extract_tag(entry) for entry in feed.findall('{*}entry')]
     # Python security tags
     security_update_tags = [tag for tag in recent_tags if tag.is_security_version()]
-    #security_update_tags = [Tag('v3.7.99', '2099-12-30'), Tag('v3.8.12', '2021-08-30'), Tag('v3.8.99', '2099-12-31')]
     # Local tags
     local_tags = subprocess.check_output(["git", "tag"], encoding='utf-8').strip().split('\n')
     new_tags = [tag for tag in security_update_tags if tag.name not in local_tags]
