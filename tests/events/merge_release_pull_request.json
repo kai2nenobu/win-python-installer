@@ -1,0 +1,13 @@
+{
+  "action": "opened",
+  "number": 99999,
+  "pull_request": {
+    "head": {
+      "ref": "new_release"
+    },
+    "base": {
+      "ref": "main"
+    },
+    "merged": false
+  }
+}

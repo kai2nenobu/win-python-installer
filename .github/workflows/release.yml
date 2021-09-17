@@ -37,9 +37,9 @@ jobs:
         build_matrix=$(echo "$new_tags" \
           | while read -r tag; do
               if [[ "$tag" =~ ^v3\.6 ]]; then
-                printf '{"tag": "%s", "os": "%s"}\n' "$tag" ubuntu-18.04 #windows-2016
+                printf '{"tag": "%s", "os": "%s"}\n' "$tag" windows-2016
               else
-                printf '{"tag": "%s", "os": "%s"}\n' "$tag" ubuntu-20.04 #windows-2019
+                printf '{"tag": "%s", "os": "%s"}\n' "$tag" windows-2019
               fi
             done \
           | paste -s -d, \

@@ -1,0 +1,14 @@
+{
+  "action": "closed",
+  "number": 99999,
+  "pull_request": {
+    "head": {
+      "ref": "new_release"
+    },
+    "base": {
+      "ref": "main"
+    },
+    "title": "✨New release v3.8.999/v3.7.999/v3.6.999",
+    "merged": false
+  }
+}
