@@ -1,72 +1,92 @@
 name: Release Python Installer
 
 on:
-  push:
-    tags: ['v*']
+  pull_request:
+    branches: [main]
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - closed
   workflow_dispatch: # Enable manual trigger
     inputs:
-      tag_name:
-        description: 'Tag name for python/cpython (ex: "vX.Y.Z")'
+      new_tags:
+        description: 'New tag list separated by / (ex: "v3.8.N/v3.7.M")'
         required: true
 
 jobs:
-  ref:
+  extract_tags:
     runs-on: ubuntu-20.04
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'new_release'
     outputs:
-      tag: ${{ steps.process.outputs.TAG }}
-      version: ${{ steps.process.outputs.VERSION }}
-      # GITHUB_REFの数字部分を結合した文字列 (ex: refs/tags/v3.6.13 -> 3613)
-      version-slug: ${{ steps.process.outputs.VERSION_SLUG }}
+      NEW_TAGS: ${{ steps.extract_tags.outputs.NEW_TAGS }}
+      BUILD_MATRIX: ${{ steps.extract_tags.outputs.BUILD_MATRIX }}
     steps:
-    - id: process
+    - name: Extract tags from PR title
+      id: extract_tags
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
+      # 新しいタグ用のビルドマトリックスを構築する
       run: |
-        if [ '${{ github.event_name }}' = 'workflow_dispatch' ]; then
-          ref='refs/tags/${{ github.event.inputs.tag_name }}'
-        else
-          ref=$GITHUB_REF
+        if [ "${{ github.event_name }}" = 'pull_request' ]; then
+          new_tags=$(echo "$PR_TITLE" | sed 's@^.*New release *\(.*\)$@\1@' | tr '/' '\n')
+        else  # workflow_dispatch event
+          new_tags=$(echo "${{ github.event.inputs.new_tags }}" | tr '/' '\n')
         fi
-        echo ::set-output name=TAG::${ref#refs/tags/}
-        echo ::set-output name=VERSION::${ref#refs/tags/v}
-        echo ::set-output name=VERSION_SLUG::$(echo $ref | grep -o [0-9] | tr -d '\n')
-  build-2016:
-    runs-on: windows-2016
-    needs: [ref]
-    if: ${{ startswith(needs.ref.outputs.tag, 'v3.6') }}
+        new_tags_array=$(echo "$new_tags" | sed -e 's@^@"@' -e 's@$@"@' | paste -s -d, | sed -e 's@^@[@' -e 's@$@]@')
+        build_matrix=$(echo "$new_tags" \
+          | while read -r tag; do
+              if [[ "$tag" =~ ^v3\.6 ]]; then
+                printf '{"tag": "%s", "os": "%s"}\n' "$tag" ubuntu-18.04 #windows-2016
+              else
+                printf '{"tag": "%s", "os": "%s"}\n' "$tag" ubuntu-20.04 #windows-2019
+              fi
+            done \
+          | paste -s -d, \
+          | sed -e 's@^@[@' -e 's@$@]@'
+        )
+        echo "::set-output name=NEW_TAGS::$new_tags_array"
+        echo "::set-output name=BUILD_MATRIX::$build_matrix"
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: extract_tags
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.extract_tags.outputs.BUILD_MATRIX) }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Build Installer
       run: |
-        powershell -NoProfile -File .\ci\build_installer.ps1 `
-          -OutDirectory "${{ github.workspace }}\dist" "${{ needs.ref.outputs.tag }}"
+        powershell -NoProfile -File ./ci/build_installer.ps1 `
+          -OutDirectory "${{ github.workspace }}/dist" "${{ matrix.tag }}"
     - uses: actions/upload-artifact@v2
       with:
-        name: ${{ needs.ref.outputs.tag }}
-        path: |
-          dist/**/python-*-amd64.exe
-  build-2019:
-    runs-on: windows-2019
-    needs: [ref]
-    if: ${{ !startswith(needs.ref.outputs.tag, 'v3.6') }}
-    steps:
-    - uses: actions/checkout@v1
-    - name: Build Installer
-      run: |
-        powershell -NoProfile -File .\ci\build_installer.ps1 `
-          -OutDirectory "${{ github.workspace }}\dist" "${{ needs.ref.outputs.tag }}"
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ needs.ref.outputs.tag }}
+        name: ${{ matrix.tag }}
         path: |
           dist/**/python-*-amd64.exe
   release:
     runs-on: ubuntu-20.04
-    needs: [ref, build-2016, build-2019]
-    if: always()
+    # プルリクエストがマージされたときのみリリースする
+    if: |
+      github.event_name == 'pull_request'
+      && github.event.action == 'closed'
+      && github.event.pull_request.merged
+    needs: [extract_tags, build]
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ${{ fromJSON(needs.extract_tags.outputs.NEW_TAGS) }}
     steps:
-    - uses: actions/checkout@v1
+    - id: process
+      run: |
+        tag=${{ matrix.tag }}
+        echo "::set-output name=VERSION::${tag#v}"
+        echo "::set-output name=VERSION_SLUG::$(echo $tag | grep -o '[0-9]' | tr -d '\n')"
+    - uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
     - name: Show downloaded artifacts
-      run: ls -AlR ${{ needs.ref.outputs.tag }}
+      run: ls -AlR ${{ matrix.tag }}
     - name: VirusTotal scan
       id: virustotal
       uses: crazy-max/ghaction-virustotal@v2
@@ -79,20 +99,24 @@ jobs:
       run: |
         url=$(echo '${{ steps.virustotal.outputs.analysis }}' | grep -o 'http.*$')
         echo "::set-output name=url::$url"
+    - name: Create tag
+      run: |
+        git tag "${{ matrix.tag }}"
+        git push --tags
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ needs.ref.outputs.tag }}
-        release_name: Python ${{ needs.ref.outputs.version }}
+        tag_name: ${{ matrix.tag }}
+        release_name: Python ${{ steps.process.outputs.VERSION }}
         body: |
           ### 📝 Description
 
-          Python ${{ needs.ref.outputs.version }} Installer ([Official release page](https://www.python.org/downloads/release/python-${{ needs.ref.outputs.version-slug }}/))
+          Python ${{ steps.process.outputs.VERSION }} Installer ([Official release page](https://www.python.org/downloads/release/python-${{ steps.process.outputs.VERSION_SLUG }}/))
 
           ### 🛡 [VirusTotal GitHub Action](https://github.com/crazy-max/ghaction-virustotal) analysis
 
-          - [`python-${{ needs.ref.outputs.version }}-amd64.exe`](${{ steps.analysis-url.outputs.url }})
+          - [`python-${{ steps.process.outputs.VERSION }}-amd64.exe`](${{ steps.analysis-url.outputs.url }})
         draft: false
         prerelease: false
       env:
@@ -102,8 +126,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ needs.ref.outputs.tag }}/amd64/python-${{ needs.ref.outputs.version }}-amd64.exe
-        asset_name: python-${{ needs.ref.outputs.version }}-amd64.exe
+        asset_path: ${{ matrix.tag }}/amd64/python-${{ steps.process.outputs.VERSION }}-amd64.exe
+        asset_name: python-${{ steps.process.outputs.VERSION }}-amd64.exe
         asset_content_type: application/octet-stream
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
