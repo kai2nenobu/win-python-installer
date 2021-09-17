@@ -10,14 +10,14 @@ on:
     - closed
   workflow_dispatch: # Enable manual trigger
     inputs:
-      tag_name:
-        description: 'Tag name for python/cpython (ex: "vX.Y.Z")'
+      new_tags:
+        description: 'New tag list separated by / (ex: "v3.8.N/v3.7.M")'
         required: true
 
 jobs:
   extract_tags:
     runs-on: ubuntu-20.04
-    if: github.head_ref == 'new_release'
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'new_release'
     outputs:
       NEW_TAGS: ${{ steps.extract_tags.outputs.NEW_TAGS }}
       BUILD_MATRIX: ${{ steps.extract_tags.outputs.BUILD_MATRIX }}
@@ -28,7 +28,11 @@ jobs:
         PR_TITLE: ${{ github.event.pull_request.title }}
       # 新しいタグ用のビルドマトリックスを構築する
       run: |
-        new_tags=$(echo "$PR_TITLE" | sed 's@^.*New release *\(.*\)$@\1@' | tr '/' '\n')
+        if [ "${{ github.event_name }}" = 'pull_request' ]; then
+          new_tags=$(echo "$PR_TITLE" | sed 's@^.*New release *\(.*\)$@\1@' | tr '/' '\n')
+        else  # workflow_dispatch event
+          new_tags=$(echo "${{ github.event.inputs.new_tags }}" | tr '/' '\n')
+        fi
         new_tags_array=$(echo "$new_tags" | sed -e 's@^@"@' -e 's@$@"@' | paste -s -d, | sed -e 's@^@[@' -e 's@$@]@')
         build_matrix=$(echo "$new_tags" \
           | while read -r tag; do
@@ -63,6 +67,11 @@ jobs:
           dist/**/python-*-amd64.exe
   release:
     runs-on: ubuntu-20.04
+    # プルリクエストがマージされたときのみリリースする
+    if: |
+      github.event_name == 'pull_request'
+      && github.event.action == 'closed'
+      && github.event.pull_request.merged
     needs: [extract_tags, build]
     strategy:
       fail-fast: false
