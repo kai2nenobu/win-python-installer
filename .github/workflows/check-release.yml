@@ -17,10 +17,18 @@ jobs:
       run: |
         new_tags=$(python3 ci/check_new_tags.py)
         echo "::set-output name=new_tags::${new_tags}"
+    - name: Generate token # to trigger other workflows when this workflow creates a PR
+      id: generate_token
+      if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ secrets.TRIGGER_APP_ID }}
+        private_key: ${{ secrets.TRIGGER_APP_PRIVATE_KEY }}
     - name: Create a pull request if new tags are found
       if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
       uses: peter-evans/create-pull-request@v3
       with:
+        token: ${{ steps.generate_token.outputs.token }}
         branch: new_release
         delete-branch: true
         commit-message: Update the latest releases for ${{ steps.check_new_tags.outputs.new_tags }}
