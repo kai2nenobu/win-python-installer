@@ -39,6 +39,14 @@ if ($Ref -eq 'v3.8.12') {
   Pop-Location
 }
 
+# Avoid a build error for version 3.7 and 3.8 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
+if ($Ref -match '^v?3\.[78]') {
+  'Avoid Windows 11 SDK in branch 3.7 and 3.8'
+  Push-Location cpython
+  git -c user.name=dummy -c 'user.email=dummy@example.com' am ..\patch\avoid_win11_sdk.patch
+  Pop-Location
+}
+
 # Build installer
 
 cmd /c cpython\Tools\msi\buildrelease.bat @BuildOptions
