@@ -41,11 +41,9 @@ if ($Ref -eq 'v3.8.12') {
 
 # Avoid a build error for version 3.7 and 3.8 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
 if ($Ref -match '^v?3\.[78]') {
-  'Overwrite python.props by one on 3.9 branch.'
+  'Avoid Windows 11 SDK in branch 3.7 and 3.8'
   Push-Location cpython
-  curl.exe -sSL https://github.com/python/cpython/raw/3.9/PCbuild/python.props > PCbuild/python.props
-  git add .
-  git -c user.name=dummy -c 'user.email=dummy@example.com' commit -m 'Overwrite python.props by one on 3.9 branch.'
+  git -c user.name=dummy -c 'user.email=dummy@example.com' am ..\patch\avoid_win11_sdk.patch
   Pop-Location
 }
 

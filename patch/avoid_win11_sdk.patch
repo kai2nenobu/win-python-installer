@@ -1,0 +1,26 @@
+From 549382f2394d4bafbbf22080f65e20d677bb977c Mon Sep 17 00:00:00 2001
+From: Steve Dower <steve.dower@python.org>
+Date: Thu, 16 Sep 2021 19:29:32 +0100
+Subject: [PATCH] Avoid automatically selecting the Windows 11 SDK preview when building
+
+Co-authored-by: Steve Dower <steve.dower@python.org>
+
+---
+ PCbuild/python.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/PCbuild/python.props b/PCbuild/python.props
+index 1034e7f..e6b2aa9 100644
+--- a/PCbuild/python.props
++++ b/PCbuild/python.props
+@@ -80,6 +80,9 @@
+     <!-- Sometimes the version in the registry has to .0 suffix, and sometimes it doesn't. Check and add it -->
+     <_RegistryVersion Condition="$(_RegistryVersion) != '' and !$(_RegistryVersion.EndsWith('.0'))">$(_RegistryVersion).0</_RegistryVersion>
+ 
++    <!-- Avoid upgrading to Windows 11 SDK for now, but assume the latest Win10 SDK is installed -->
++    <_RegistryVersion Condition="$([System.Version]::Parse($(_RegistryVersion))) >= $([System.Version]::Parse(`10.0.22000.0`))">10.0.19041.0</_RegistryVersion>
++
+     <!-- The minimum allowed SDK version to use for building -->
+     <DefaultWindowsSDKVersion>10.0.10586.0</DefaultWindowsSDKVersion>
+     <DefaultWindowsSDKVersion Condition="$([System.Version]::Parse($(_RegistryVersion))) > $([System.Version]::Parse($(DefaultWindowsSDKVersion)))">$(_RegistryVersion)</DefaultWindowsSDKVersion>
+
