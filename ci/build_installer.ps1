@@ -21,10 +21,6 @@ if ($LASTEXITCODE -gt 0) { exit $LASTEXITCODE }
 
 # Special operations for version 3.6.x
 if ($Ref.StartsWith('3.6') -or $Ref.StartsWith('v3.6')) {
-  'Monkey Patch for python 3.6.x'
-  $file = 'cpython\Doc\make.bat'
-  ((Get-Content -Path $file -Raw) -replace '-m pip install sphinx','-m pip install sphinx==2.2.0') `
-    | Set-Content -Path $file
   'Skip PGO compile for python 3.6.x'
   $BuildOptions += '--skip-pgo'
 }
@@ -37,6 +33,13 @@ if ($Ref -eq 'v3.8.12') {
   curl.exe -sSL https://github.com/python/cpython/commit/8c3a10e58b12608c3759fee684e7aa399facae2a.patch `
     | git -c user.name=dummy -c 'user.email=dummy@example.com' am
   Pop-Location
+}
+
+'Install documentation dependencies'  # https://bugs.python.org/issue45618
+if ($Ref -match '^v?3\.[67]') {
+  python -m pip install sphinx==2.2.0 docutils==0.17.1 blurb python-docs-theme
+} else {
+  python -m pip install -r ./cpython/Doc/requirements.txt
 }
 
 # Avoid a build error for version 3.7 and 3.8 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)

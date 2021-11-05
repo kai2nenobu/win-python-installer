@@ -47,6 +47,9 @@ jobs:
       run: |
         powershell -NoProfile -File .\ci\build_installer.ps1 `
           -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.branch }}"
+      env:
+        SPHINXBUILD: python -m sphinx
+        BLURB: python -m blurb
     - name: Show dist
       run: |
         ls -R "${{ github.workspace }}\dist"
