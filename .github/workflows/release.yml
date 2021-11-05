@@ -60,6 +60,9 @@ jobs:
       run: |
         powershell -NoProfile -File ./ci/build_installer.ps1 `
           -OutDirectory "${{ github.workspace }}/dist" "${{ matrix.tag }}"
+      env:
+        SPHINXBUILD: python -m sphinx
+        BLURB: python -m blurb
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.tag }}
