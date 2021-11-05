@@ -39,7 +39,7 @@ if ($Ref -eq 'v3.8.12') {
 if ($Ref -match '^v?3\.[67]') {
   python -m pip install sphinx==2.2.0 docutils==0.17.1 blurb python-docs-theme
 } else {
-  python -m pip install -r ./Docs/requirements.txt
+  python -m pip install -r ./cpython/Doc/requirements.txt
 }
 
 # Avoid a build error for version 3.7 and 3.8 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
