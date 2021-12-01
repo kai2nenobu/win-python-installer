@@ -21,9 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - version: '3.6'
-          branch:  '3.6'
-          os: windows-2016
         - version: '3.7'
           branch:  '3.7'
           os: windows-2019
