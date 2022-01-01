@@ -52,7 +52,7 @@ def update_readme(tag: Tag):
     minor_version = f'{major}.{minor}'
     release_date = tag.updated[:10]
     tag_url = 'https://github.com/kai2nenobu/win-python-installer/releases/tag'
-    new_line = f'| {minor_version:>10} | [{minor_version}.{patch}]({tag_url}/{tag.name}) | {release_date} |\n'
+    new_line = f'| {minor_version:>10} | [{minor_version}.{patch}]({tag_url}/{tag.name}) | {release_date} |             |\n'
 
     readme_lines = []
     # Replace the latest release table
