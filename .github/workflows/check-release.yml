@@ -31,7 +31,7 @@ jobs:
         token: ${{ steps.generate_token.outputs.token }}
         branch: new_release
         delete-branch: true
-        commit-message: Update the latest releases for ${{ steps.check_new_tags.outputs.new_tags }}
+        commit-message: Update latest releases for ${{ steps.check_new_tags.outputs.new_tags }}
         author: Tsunenobu Kai <kai2nenobu@gmail.com>
         reviewers: kai2nenobu
         assignees: kai2nenobu
