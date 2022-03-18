@@ -92,7 +92,7 @@ jobs:
       with:
         vt_api_key: ${{ secrets.VT_API_KEY }}
         files: |
-          **/python-*-amd64.exe
+          ${{ matrix.tag }}/**/python-*-amd64.exe
     - name: Get VirusTotal analysis URL
       id: analysis-url
       run: |
