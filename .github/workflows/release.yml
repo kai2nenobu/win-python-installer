@@ -19,14 +19,17 @@ jobs:
     runs-on: ubuntu-20.04
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'new_release'
     outputs:
-      NEW_TAGS: ${{ steps.extract_tags.outputs.NEW_TAGS }}
       BUILD_MATRIX: ${{ steps.extract_tags.outputs.BUILD_MATRIX }}
     steps:
     - name: Extract tags from PR title
       id: extract_tags
       env:
         PR_TITLE: ${{ github.event.pull_request.title }}
-      # 新しいタグ用のビルドマトリックスを構築する
+      # 下記のような新しいタグ用のビルドマトリックスを構築する
+      # [
+      #   {"tag":"v3.6.15","os":"windows-2016"},
+      #   {"tag":"v3.7.12","os":"windows-2019"}
+      # ]
       run: |
         if [ "${{ github.event_name }}" = 'pull_request' ]; then
           new_tags=$(echo "$PR_TITLE" | sed 's@^.*New release *\(.*\)$@\1@' | tr '/' '\n')
@@ -41,7 +44,6 @@ jobs:
           | paste -s -d, \
           | sed -e 's@^@[@' -e 's@$@]@'
         )
-        echo "::set-output name=NEW_TAGS::$new_tags_array"
         echo "::set-output name=BUILD_MATRIX::$build_matrix"
   build:
     runs-on: ${{ matrix.os }}
@@ -75,7 +77,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: ${{ fromJSON(needs.extract_tags.outputs.NEW_TAGS) }}
+        include: ${{ fromJSON(needs.extract_tags.outputs.BUILD_MATRIX) }}
+    name: release (${{ matrix.tag }})
     steps:
     - id: process
       run: |
