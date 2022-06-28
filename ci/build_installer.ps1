@@ -35,10 +35,8 @@ if ($Ref -eq 'v3.8.12') {
   Pop-Location
 }
 
-'Install documentation dependencies'  # https://bugs.python.org/issue45618
-if ($Ref -match '^v?3\.[67]') {
-  python -m pip install sphinx==2.2.0 docutils==0.17.1 blurb python-docs-theme
-} else {
+'Install documentation dependencies'  # greater than or equal to 3.8
+if ($Ref -notmatch '^v?3\.[67]') {
   python -m pip install -r ./cpython/Doc/requirements.txt
 }
 
