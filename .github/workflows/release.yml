@@ -58,6 +58,11 @@ jobs:
       run: |
         powershell -NoProfile -File ./ci/build_installer.ps1 `
           -OutDirectory "${{ github.workspace }}/dist" "${{ matrix.tag }}"
+    - name: Check built installer
+      run: |
+        Get-ChildItem -R 'dist'
+        $count = (Get-ChildItem -ea Stop 'dist/**/python-*-amd64.exe').Count
+        if ($count -eq 0) { Write-Error -ea Stop 'Build for installer failed!' }
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.tag }}
