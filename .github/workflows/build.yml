@@ -34,6 +34,9 @@ jobs:
           branch:  '3.10'
           os: windows-2019
         - version: '3.11'
+          branch:  '3.11'
+          os: windows-2019
+        - version: '3.12'
           branch:  'main'
           os: windows-2019
     steps:
