@@ -63,7 +63,7 @@ jobs:
         Get-ChildItem -R 'dist'
         $count = (Get-ChildItem -ea Stop 'dist/**/python-*-amd64.exe').Count
         if ($count -eq 0) { Write-Error -ea Stop 'Build for installer failed!' }
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.tag }}
         path: |
