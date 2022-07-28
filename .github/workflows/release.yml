@@ -53,7 +53,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.extract_tags.outputs.BUILD_MATRIX) }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build Installer
       run: |
         powershell -NoProfile -File ./ci/build_installer.ps1 `
@@ -87,7 +87,7 @@ jobs:
         tag=${{ matrix.tag }}
         echo "::set-output name=VERSION::${tag#v}"
         echo "::set-output name=VERSION_SLUG::$(echo $tag | grep -o '[0-9]' | tr -d '\n')"
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/download-artifact@v2
     - name: Show downloaded artifacts
       run: ls -AlR ${{ matrix.tag }}
