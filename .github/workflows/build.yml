@@ -13,6 +13,13 @@ on:
     - '.github/workflows/build.yml'
   schedule:
   - cron:  '15 22 * * *'  # once a day
+  workflow_dispatch: # Enable manual trigger
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        required: false
+        default: false
 
 jobs:
   build:
@@ -57,3 +64,8 @@ jobs:
         name: ${{ matrix.version }}
         path: |
           dist/**/python-*-amd64.exe
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true
+      if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
