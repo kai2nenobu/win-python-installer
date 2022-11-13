@@ -1,0 +1,11 @@
+--- a/Tools/msi/exe/exe.wixproj
++++ b/Tools/msi/exe/exe.wixproj
+@@ -36,7 +36,7 @@
+         <ItemGroup>
+             <HostPython Include="$(ExternalsDir)python*\tools\python.exe" />
+             <HostPython Include="@(HostPython)" Condition="Exists(%(FullPath))" />
+-            <HostPython Include="py" Condition="@(HostPython) == ''" />
++            <HostPython Include="py.exe" Condition="@(HostPython) == ''" />
+         </ItemGroup>
+         <PropertyGroup>
+             <HostPython>@(HostPython)</HostPython>
