@@ -1,4 +1,4 @@
-﻿
+
 [CmdletBinding()]
 Param(
   [Parameter(Position=0)]
@@ -53,6 +53,8 @@ if ($Ref -match '^v?3\.([789]|10)') {
   'Avoid a build error for exe.wixproj between version 3.7 and 3.10'
   Push-Location cpython
   git apply ..\patch\avoid_pylauncher_311_error.patch
+  git add --update .
+  git -c user.name=dummy -c 'user.email=dummy@example.com' commit -m 'Avoid a build error for exe.wixproj between version 3.7 and 3.10'
   Pop-Location
 }
 
