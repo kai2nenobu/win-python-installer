@@ -30,22 +30,22 @@ jobs:
         include:
         - version: '3.7'
           branch:  '3.7'
-          os: windows-2022
+          os: windows-2019
         - version: '3.8'
           branch:  '3.8'
-          os: windows-2022
+          os: windows-2019
         - version: '3.9'
           branch:  '3.9'
-          os: windows-2022
+          os: windows-2019
         - version: '3.10'
           branch:  '3.10'
-          os: windows-2022
+          os: windows-2019
         - version: '3.11'
           branch:  '3.11'
-          os: windows-2022
+          os: windows-2019
         - version: '3.12'
           branch:  'main'
-          os: windows-2022
+          os: windows-2019
     steps:
     - uses: actions/checkout@v3
     - name: Show env
