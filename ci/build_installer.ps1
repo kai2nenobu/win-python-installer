@@ -1,4 +1,4 @@
-
+﻿
 [CmdletBinding()]
 Param(
   [Parameter(Position=0)]
@@ -40,9 +40,9 @@ if ($Ref -notmatch '^v?3\.[67]') {
   python -m pip install -r ./cpython/Doc/requirements.txt
 }
 
-# Avoid a build error for version 3.7 and 3.8 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
-if ($Ref -match '^v?3\.[78]') {
-  'Avoid Windows 11 SDK in branch 3.7 and 3.8'
+# Avoid a build error for version 3.7 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
+if ($Ref -match '^v?3\.7') {
+  'Avoid Windows 11 SDK in branch 3.7'
   Push-Location cpython
   git -c user.name=dummy -c 'user.email=dummy@example.com' am ..\patch\avoid_win11_sdk.patch
   Pop-Location
