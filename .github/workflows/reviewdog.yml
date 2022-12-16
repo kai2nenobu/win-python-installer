@@ -1,0 +1,13 @@
+name: Reviewdog
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: reviewdog/action-actionlint@v1
+      with:
+        filter_mode: nofilter
