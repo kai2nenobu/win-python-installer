@@ -48,16 +48,6 @@ if ($Ref -match '^v?3\.7') {
   Pop-Location
 }
 
-# Avoid a build error for exe.wixproj between version 3.7 and 3.10 (ref. https://github.com/kai2nenobu/win-python-installer/issues/28)
-if ($Ref -match '^v?3\.([789]|10)') {
-  'Avoid a build error for exe.wixproj between version 3.7 and 3.10'
-  Push-Location cpython
-  git apply ..\patch\avoid_pylauncher_311_error.patch
-  git add --update .
-  git -c user.name=dummy -c 'user.email=dummy@example.com' commit -m 'Avoid a build error for exe.wixproj between version 3.7 and 3.10'
-  Pop-Location
-}
-
 # Build installer
 cmd /c cpython\Tools\msi\buildrelease.bat @BuildOptions
 if ($LASTEXITCODE -gt 0) { exit $LASTEXITCODE }
