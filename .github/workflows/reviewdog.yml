@@ -4,14 +4,19 @@ on:
     branches: [main]
 
 jobs:
-  lint:
+  actionlint:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - name: actionlint
-        uses: reviewdog/action-actionlint@v1
+      - uses: reviewdog/action-actionlint@v1
         with:
           # Disable shellcheck to prevent false positive about powershell scripts
           actionlint_flags: -shellcheck=
-      - name: yamllint
-        uses: reviewdog/action-yamllint@v1
+          filter_mode: nofilter
+  yamllint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: reviewdog/action-yamllint@v1
+        with:
+          filter_mode: nofilter
