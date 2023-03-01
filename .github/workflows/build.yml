@@ -32,6 +32,7 @@ jobs:
     outputs:
       BUILD_MATRIX: ${{ steps.extract.outputs.BUILD_MATRIX }}
     steps:
+    - uses: actions/checkout@v3
     - name: Extract versions from PR title
       id: extract
       # 下記のような複数バージョンのビルドマトリックスを構築する
@@ -40,7 +41,7 @@ jobs:
       #   {"version": "v3.8.15", "branch": "v3.8.15", "os": "windows-2016"}
       # ]
       run: |
-        python3 ./ci/version_matrix.py "${{ github.event.inputs.new_tags }}" | tee "$GITHUB_OUTPUT"
+        python3 ./ci/version_matrix.py "${{ github.event.inputs.build_versions }}" | tee "$GITHUB_OUTPUT"
   build:
     needs: extract_versions
     strategy:
