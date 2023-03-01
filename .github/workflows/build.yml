@@ -33,12 +33,13 @@ jobs:
       BUILD_MATRIX: ${{ steps.extract.outputs.BUILD_MATRIX }}
     steps:
     - uses: actions/checkout@v3
-    - name: Extract versions from PR title
+    - name: Extract versions
       id: extract
       # 下記のような複数バージョンのビルドマトリックスを構築する
       # [
-      #   {"version": "3.7", "branch": "3.7", "os": "windows-2016"},
-      #   {"version": "v3.8.15", "branch": "v3.8.15", "os": "windows-2016"}
+      #   {"version": "3.7", "ref": "3.7", "os": "windows-2019"},
+      #   {"version": "v3.8.15", "ref": "v3.8.15", "os": "windows-2019"},
+      #   {"version": "3.12", "ref": "main", "os": "windows-2019"}
       # ]
       run: |
         python3 ./ci/version_matrix.py "${{ github.event.inputs.build_versions }}" | tee "$GITHUB_OUTPUT"
@@ -56,7 +57,7 @@ jobs:
     - name: Build Installer
       run: |
         powershell -NoProfile -File .\ci\build_installer.ps1 `
-          -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.branch }}"
+          -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.ref }}"
     - name: Check built installer
       run: |
         Get-ChildItem -R 'dist'
