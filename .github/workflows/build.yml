@@ -15,6 +15,11 @@ on:
   - cron:  '15 22 * * *'  # once a day
   workflow_dispatch: # Enable manual trigger
     inputs:
+      build_versions:
+        description: 'Version list to build (separated by / like "3.7/v3.8.15")'
+        type: string
+        required: true
+        default: 3.7/3.8/3.9/3.10/3.11/3.12
       debug_enabled:
         type: boolean
         description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
@@ -22,30 +27,27 @@ on:
         default: false
 
 jobs:
+  extract_versions:
+    runs-on: ubuntu-20.04
+    outputs:
+      BUILD_MATRIX: ${{ steps.extract.outputs.BUILD_MATRIX }}
+    steps:
+    - name: Extract versions from PR title
+      id: extract
+      # 下記のような複数バージョンのビルドマトリックスを構築する
+      # [
+      #   {"version": "3.7", "branch": "3.7", "os": "windows-2016"},
+      #   {"version": "v3.8.15", "branch": "v3.8.15", "os": "windows-2016"}
+      # ]
+      run: |
+        python3 ./ci/version_matrix.py "${{ github.event.inputs.new_tags }}" | tee "$GITHUB_OUTPUT"
   build:
-    runs-on: ${{ matrix.os }}
+    needs: extract_versions
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - version: '3.7'
-          branch:  '3.7'
-          os: windows-2019
-        - version: '3.8'
-          branch:  '3.8'
-          os: windows-2019
-        - version: '3.9'
-          branch:  '3.9'
-          os: windows-2019
-        - version: '3.10'
-          branch:  '3.10'
-          os: windows-2019
-        - version: '3.11'
-          branch:  '3.11'
-          os: windows-2019
-        - version: '3.12'
-          branch:  'main'
-          os: windows-2019
+        include: ${{ fromJSON(needs.extract_versions.outputs.BUILD_MATRIX) }}  
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - name: Show env
