@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 
+
 def main() -> None:
     import json
 
@@ -12,5 +13,5 @@ def main() -> None:
     print(f"BUILD_MATRIX={json.dumps(version_matrix)}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
