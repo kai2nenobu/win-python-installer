@@ -12,9 +12,11 @@ jobs:
       uses: reviewdog/action-actionlint@v1
       with:
         filter_mode: nofilter
+        reporter: github-pr-review
         # Disable shellcheck to prevent false positive about powershell scripts
         actionlint_flags: -shellcheck=
     - name: yamllint
       uses: reviewdog/action-yamllint@v1
       with:
         filter_mode: nofilter
+        reporter: github-pr-review
