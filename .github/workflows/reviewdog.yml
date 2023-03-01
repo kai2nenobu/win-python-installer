@@ -1,22 +1,22 @@
 name: Reviewdog
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
-    - name: actionlint
-      uses: reviewdog/action-actionlint@v1
-      with:
-        filter_mode: nofilter
-        reporter: github-pr-review
-        # Disable shellcheck to prevent false positive about powershell scripts
-        actionlint_flags: -shellcheck=
-    - name: yamllint
-      uses: reviewdog/action-yamllint@v1
-      with:
-        filter_mode: nofilter
-        reporter: github-pr-review
+      - uses: actions/checkout@v3
+      - name: actionlint
+        uses: reviewdog/action-actionlint@v1
+        with:
+          filter_mode: nofilter
+          reporter: github-pr-review
+          # Disable shellcheck to prevent false positive about powershell scripts
+          actionlint_flags: -shellcheck=
+      - name: yamllint
+        uses: reviewdog/action-yamllint@v1
+        with:
+          filter_mode: nofilter
+          reporter: github-pr-review
