@@ -35,11 +35,6 @@ if ($Ref -eq 'v3.8.12') {
   Pop-Location
 }
 
-'Install documentation dependencies'  # greater than or equal to 3.8
-if ($Ref -notmatch '^v?3\.[67]') {
-  python -m pip install -r ./cpython/Doc/requirements.txt
-}
-
 # Avoid a build error for version 3.7 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
 if ($Ref -match '^v?3\.7') {
   'Avoid Windows 11 SDK in branch 3.7'
