@@ -47,7 +47,7 @@ if ($Ref -match '^v?3\.7') {
 # ref. https://github.com/kai2nenobu/win-python-installer/issues/37
 if ($Ref -match '^v?3\.([789]|10)') {
   'Pin python-docs-theme version to 2022.1'
-  Get-Content ./cpython/Doc/requirements.txt `
+  (Get-Content ./cpython/Doc/requirements.txt) `
     | ForEach-Object { if ($_ -match '^python-docs-theme') { 'python-docs-theme==2022.1' } else { $_ } } `
     | Set-Content ./cpython/Doc/requirements.txt
 }
