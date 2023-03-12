@@ -35,17 +35,21 @@ if ($Ref -eq 'v3.8.12') {
   Pop-Location
 }
 
-'Install documentation dependencies'  # greater than or equal to 3.8
-if ($Ref -notmatch '^v?3\.[67]') {
-  python -m pip install -r ./cpython/Doc/requirements.txt
-}
-
 # Avoid a build error for version 3.7 (ref. https://github.com/kai2nenobu/win-python-installer/issues/6)
 if ($Ref -match '^v?3\.7') {
   'Avoid Windows 11 SDK in branch 3.7'
   Push-Location cpython
   git -c user.name=dummy -c 'user.email=dummy@example.com' am ..\patch\avoid_win11_sdk.patch
   Pop-Location
+}
+
+# Pin python-docs-theme version in python version less than 3.11
+# ref. https://github.com/kai2nenobu/win-python-installer/issues/37
+if ($Ref -match '^v?3\.([789]|10)') {
+  'Pin python-docs-theme version to 2022.1'
+  (Get-Content ./cpython/Doc/requirements.txt) `
+    | ForEach-Object { if ($_ -match '^python-docs-theme') { 'python-docs-theme==2022.1' } else { $_ } } `
+    | Set-Content ./cpython/Doc/requirements.txt
 }
 
 # Build installer
