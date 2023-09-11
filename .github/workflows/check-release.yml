@@ -20,7 +20,7 @@ jobs:
     - name: Generate token # to trigger other workflows when this workflow creates a PR
       id: generate_token
       if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
-      uses: tibdex/github-app-token@v1
+      uses: tibdex/github-app-token@v2
       with:
         app_id: ${{ secrets.TRIGGER_APP_ID }}
         private_key: ${{ secrets.TRIGGER_APP_PRIVATE_KEY }}
