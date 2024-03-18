@@ -42,8 +42,11 @@ jobs:
           branch:  '3.11'
           os: windows-2019
         - version: '3.12'
-          branch:  'main'
+          branch:  '3.12'
           os: windows-2019
+        - version: '3.13'
+          branch:  'main'
+          os: windows-2022
     steps:
     - uses: actions/checkout@v4
     - name: Show env
