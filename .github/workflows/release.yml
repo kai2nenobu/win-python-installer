@@ -53,7 +53,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.extract_tags.outputs.BUILD_MATRIX) }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Build Installer
       run: |
         powershell -NoProfile -File ./ci/build_installer.ps1 `
@@ -87,7 +87,7 @@ jobs:
         tag=${{ matrix.tag }}
         echo "VERSION=${tag#v}" >> "$GITHUB_OUTPUT"
         echo "VERSION_SLUG=$(echo $tag | grep -o '[0-9]' | tr -d '\n')" >> "$GITHUB_OUTPUT"
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: actions/download-artifact@v3
     - name: Show downloaded artifacts
       run: ls -AlR ${{ matrix.tag }}

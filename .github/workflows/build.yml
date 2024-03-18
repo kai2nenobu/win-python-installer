@@ -44,7 +44,7 @@ jobs:
           branch:  'main'
           os: windows-2019
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Show env
       run: cmd /c set
     - name: Build Installer
