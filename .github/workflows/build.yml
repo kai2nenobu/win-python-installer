@@ -50,6 +50,7 @@ jobs:
       run: cmd /c set
     - uses: actions/setup-python@v5
       # Use a specific version as HOST_PYTHON
+      name: Use Python ${{ matrix.HOST_PYTHON }} as HOST_PYTHON
       id: host_python
       with:
         python-version: ${{ matrix.HOST_PYTHON }}
