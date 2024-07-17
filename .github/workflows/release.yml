@@ -36,15 +36,7 @@ jobs:
         else  # workflow_dispatch event
           new_tags=$(echo "${{ github.event.inputs.new_tags }}" | tr '/' '\n')
         fi
-        new_tags_array=$(echo "$new_tags" | sed -e 's@^@"@' -e 's@$@"@' | paste -s -d, | sed -e 's@^@[@' -e 's@$@]@')
-        build_matrix=$(echo "$new_tags" \
-          | while read -r tag; do
-              printf '{"tag": "%s", "os": "%s"}\n' "$tag" windows-2019
-            done \
-          | paste -s -d, \
-          | sed -e 's@^@[@' -e 's@$@]@'
-        )
-        echo "BUILD_MATRIX=$build_matrix" >> "$GITHUB_OUTPUT"
+        python ci/tag2matrix.py "$new_tags" >> "$GITHUB_OUTPUT"
   build:
     runs-on: ${{ matrix.os }}
     needs: extract_tags
