@@ -37,7 +37,8 @@ jobs:
         else  # workflow_dispatch event
           new_tags=$(echo "${{ github.event.inputs.new_tags }}")
         fi
-        python ci/tag2matrix.py "$new_tags" >> "$GITHUB_OUTPUT"
+        build_matrix=$(python ci/tag2matrix.py "$new_tags")
+        echo "BUILD_MATRIX=$build_matrix" >> "$GITHUB_OUTPUT"
   build:
     runs-on: ${{ matrix.os }}
     needs: extract_tags
