@@ -21,6 +21,7 @@ jobs:
     outputs:
       BUILD_MATRIX: ${{ steps.extract_tags.outputs.BUILD_MATRIX }}
     steps:
+    - uses: actions/checkout@v4
     - name: Extract tags from PR title
       id: extract_tags
       env:
