@@ -1,6 +1,9 @@
 """
 Convert CPython tags to a build matrix for GitHub Actions
 """
+from __future__ import annotations
+
+
 import json
 import sys
 import unittest
