@@ -41,28 +41,23 @@ ALL_VERSIONS = "/".join(BASE_MATRIX.keys())
 
 
 def to_matrix(event: GitHubEvent) -> list[dict]:
-    if event.EVENT_NAME == "schedule":
-        tags = ALL_VERSIONS
-    elif event.EVENT_NAME == "pull_request":
-        if event.BRANCH_NAME == "new_release":
-            tags = re.sub(r"^.*New release *", "", event.PR_TITLE)
-        else:
-            tags = ALL_VERSIONS
+    if event.EVENT_NAME == "pull_request" and event.BRANCH_NAME == "new_release":
+        versions = re.sub(r"^.*New release *", "", event.PR_TITLE)
     elif event.EVENT_NAME == "workflow_dispatch":
-        tags = event.TARGET_VERSIONS
+        versions = event.TARGET_VERSIONS
     else:
-        tags = ALL_VERSIONS
-    tag_list = tags.split("/")
+        versions = ALL_VERSIONS
+    version_list = versions.split("/")
 
-    def convert(tag: str) -> dict:
-        minor_version = ".".join(tag.lstrip("v").split(".")[0:2])
+    def convert(version: str) -> dict:
+        minor_version = ".".join(version.lstrip("v").split(".")[0:2])
         matrix = BASE_MATRIX[minor_version].copy()
-        matrix["version"] = tag
+        matrix["version"] = version
         if "branch" not in matrix:
             matrix["branch"] = minor_version
         return matrix
 
-    matrix = [convert(tag) for tag in tag_list]
+    matrix = [convert(version) for version in version_list]
     return matrix
 
 
