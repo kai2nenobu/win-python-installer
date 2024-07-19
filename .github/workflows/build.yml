@@ -1,52 +1,55 @@
 name: Build Python Installer
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-    - 'ci/**'
-    - '.github/workflows/build.yml'
   pull_request:
-    branches: [ main ]
-    paths:
-    - 'ci/**'
-    - '.github/workflows/build.yml'
+    branches: [main]
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - closed
   schedule:
   - cron:  '15 22 * * *'  # once a day
   workflow_dispatch: # Enable manual trigger
     inputs:
+      target_versions:
+        description: 'Target version list separated by slash. Tags or minor versions are acceptable. (ex: "v3.8.N/v3.7.M" or "3.9/3.10")'
+        required: true
       debug_enabled:
         type: boolean
-        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
-
 jobs:
+  build_matrix:
+    runs-on: ubuntu-20.04
+    outputs:
+      BUILD_MATRIX: ${{ steps.gen_matrix.outputs.BUILD_MATRIX }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Generate build matrix
+      id: gen_matrix
+      run: |
+        build_matrix=$(python ci/gen_matrix.py)
+        echo "BUILD_MATRIX=$build_matrix" >> "$GITHUB_OUTPUT"
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        TARGET_VERSIONS: ${{ github.event.inputs.target_versions }}
   build:
     runs-on: ${{ matrix.os }}
+    needs: build_matrix
+    name: Build ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - version: '3.8'
-          branch:  '3.8'
-          os: windows-2019
-          HOST_PYTHON:  '3.8'
-        - version: '3.9'
-          branch:  '3.9'
-          os: windows-2019
-        - version: '3.10'
-          branch:  '3.10'
-          os: windows-2019
-        - version: '3.11'
-          branch:  '3.11'
-          os: windows-2019
-        - version: '3.12'
-          branch:  '3.12'
-          os: windows-2019
-        - version: '3.13'
-          branch:  'main'
-          os: windows-2022
+        include: ${{ fromJSON(needs.build_matrix.outputs.BUILD_MATRIX) }}
+        # matrix elements
+        #   os: Runner OS
+        #   version: version name to build
+        #   branch: branch name to build
+        #   HOST_PYTHON: python version used on build
     steps:
     - uses: actions/checkout@v4
     - name: Show env
