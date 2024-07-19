@@ -1,3 +1,4 @@
 cpython/
 dist/
 workflow/
+*.pyc
