@@ -54,7 +54,7 @@ def to_matrix(event: GitHubEvent) -> list[dict]:
         matrix = BASE_MATRIX[minor_version].copy()
         matrix["version"] = version
         if "branch" not in matrix:
-            matrix["branch"] = minor_version
+            matrix["branch"] = version if version.startswith("v") else minor_version
         return matrix
 
     matrix = [convert(version) for version in version_list]
@@ -91,9 +91,9 @@ class Test(unittest.TestCase):
         "release_pr": {
             "event": {"EVENT_NAME": "pull_request", "BRANCH_NAME": "new_release", "PR_TITLE": "✨New release v3.10.14/v3.9.19/v3.8.19"},
             "expected": [
-                {"version": "v3.10.14", "os": "windows-2019", "branch": "3.10"},
-                {"version": "v3.9.19", "os": "windows-2019", "branch": "3.9"},
-                {"version": "v3.8.19", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
+                {"version": "v3.10.14", "os": "windows-2019", "branch": "v3.10.14"},
+                {"version": "v3.9.19", "os": "windows-2019", "branch": "v3.9.19"},
+                {"version": "v3.8.19", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "v3.8.19"},
             ]
         },
         "non_release_pr": {
