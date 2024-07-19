@@ -4,12 +4,12 @@ on:
   pull_request:
     branches: [main]
     types:
-    - opened
-    - reopened
-    - synchronize
-    - closed
+      - opened
+      - reopened
+      - synchronize
+      - closed
   schedule:
-  - cron:  '15 22 * * *'  # once a day
+    - cron: "15 22 * * *" # once a day
   workflow_dispatch: # Enable manual trigger
     inputs:
       target_versions:
@@ -17,7 +17,7 @@ on:
         required: true
       debug_enabled:
         type: boolean
-        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        description: "Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)"
         required: false
         default: false
 jobs:
@@ -26,17 +26,17 @@ jobs:
     outputs:
       BUILD_MATRIX: ${{ steps.gen_matrix.outputs.BUILD_MATRIX }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Generate build matrix
-      id: gen_matrix
-      run: |
-        build_matrix=$(python ci/gen_matrix.py)
-        echo "BUILD_MATRIX=$build_matrix" >> "$GITHUB_OUTPUT"
-      env:
-        EVENT_NAME: ${{ github.event_name }}
-        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-        PR_TITLE: ${{ github.event.pull_request.title }}
-        TARGET_VERSIONS: ${{ github.event.inputs.target_versions }}
+      - uses: actions/checkout@v4
+      - name: Generate build matrix
+        id: gen_matrix
+        run: |
+          build_matrix=$(python ci/gen_matrix.py)
+          echo "BUILD_MATRIX=$build_matrix" >> "$GITHUB_OUTPUT"
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          TARGET_VERSIONS: ${{ github.event.inputs.target_versions }}
   build:
     runs-on: ${{ matrix.os }}
     needs: build_matrix
@@ -51,37 +51,37 @@ jobs:
         #   branch: branch name to build
         #   HOST_PYTHON: python version used on build
     steps:
-    - uses: actions/checkout@v4
-    - name: Show env
-      run: cmd /c set
-    - uses: actions/setup-python@v5
-      # Use a specific version as HOST_PYTHON
-      name: Use Python ${{ matrix.HOST_PYTHON }} as HOST_PYTHON
-      id: host_python
-      with:
-        python-version: ${{ matrix.HOST_PYTHON }}
-      if: matrix.HOST_PYTHON
-    - name: Build Installer
-      run: |
-        powershell -NoProfile -File .\ci\build_installer.ps1 `
-          -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.branch }}"
-      env:
-        HOST_PYTHON: ${{ matrix.HOST_PYTHON && steps.host_python.outputs.python-path || '' }}
-    - name: Check built installer
-      run: |
-        Get-ChildItem -R 'dist'
-        $count = (Get-ChildItem -ea Stop 'dist/**/python-*-amd64.exe').Count
-        if ($count -eq 0) { Write-Error -ea Stop 'Build for installer failed!' }
-    - uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.version }}
-        path: |
-          dist/**/python-*-amd64.exe
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: true
-      if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
+      - uses: actions/checkout@v4
+      - name: Show env
+        run: cmd /c set
+      - uses: actions/setup-python@v5
+        # Use a specific version as HOST_PYTHON
+        name: Use Python ${{ matrix.HOST_PYTHON }} as HOST_PYTHON
+        id: host_python
+        with:
+          python-version: ${{ matrix.HOST_PYTHON }}
+        if: matrix.HOST_PYTHON
+      - name: Build Installer
+        run: |
+          powershell -NoProfile -File .\ci\build_installer.ps1 `
+            -OutDirectory "${{ github.workspace }}\dist" "${{ matrix.branch }}"
+        env:
+          HOST_PYTHON: ${{ matrix.HOST_PYTHON && steps.host_python.outputs.python-path || '' }}
+      - name: Check built installer
+        run: |
+          Get-ChildItem -R 'dist'
+          $count = (Get-ChildItem -ea Stop 'dist/**/python-*-amd64.exe').Count
+          if ($count -eq 0) { Write-Error -ea Stop 'Build for installer failed!' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.version }}
+          path: |
+            dist/**/python-*-amd64.exe
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+        if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
   release:
     runs-on: ubuntu-20.04
     # プルリクエストがマージされたときのみリリースする
@@ -96,56 +96,56 @@ jobs:
         include: ${{ fromJSON(needs.build_matrix.outputs.BUILD_MATRIX) }}
     name: Release (${{ matrix.version }})
     steps:
-    - id: process
-      run: |
-        tag=${{ matrix.version }}
-        echo "VERSION=${tag#v}" >> "$GITHUB_OUTPUT"
-        echo "VERSION_SLUG=$(echo $tag | grep -o '[0-9]' | tr -d '\n')" >> "$GITHUB_OUTPUT"
-    - uses: actions/checkout@v4
-    - uses: actions/download-artifact@v4
-    - name: Show downloaded artifacts
-      run: ls -AlR ${{ matrix.version }}
-    - name: VirusTotal scan
-      id: virustotal
-      uses: crazy-max/ghaction-virustotal@v4
-      with:
-        vt_api_key: ${{ secrets.VT_API_KEY }}
-        files: |
-          ${{ matrix.version }}/**/python-*-amd64.exe
-    - name: Get VirusTotal analysis URL
-      id: analysis-url
-      run: |
-        url=$(echo '${{ steps.virustotal.outputs.analysis }}' | grep -o 'http.*$')
-        echo "url=$url" >> "$GITHUB_OUTPUT"
-    - name: Create tag
-      run: |
-        git tag "${{ matrix.version }}"
-        git push --tags
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      with:
-        tag_name: ${{ matrix.version }}
-        release_name: Python ${{ steps.process.outputs.VERSION }}
-        body: |
-          ### 📝 Description
+      - id: process
+        run: |
+          tag=${{ matrix.version }}
+          echo "VERSION=${tag#v}" >> "$GITHUB_OUTPUT"
+          echo "VERSION_SLUG=$(echo $tag | grep -o '[0-9]' | tr -d '\n')" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+      - name: Show downloaded artifacts
+        run: ls -AlR ${{ matrix.version }}
+      - name: VirusTotal scan
+        id: virustotal
+        uses: crazy-max/ghaction-virustotal@v4
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          files: |
+            ${{ matrix.version }}/**/python-*-amd64.exe
+      - name: Get VirusTotal analysis URL
+        id: analysis-url
+        run: |
+          url=$(echo '${{ steps.virustotal.outputs.analysis }}' | grep -o 'http.*$')
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Create tag
+        run: |
+          git tag "${{ matrix.version }}"
+          git push --tags
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ matrix.version }}
+          release_name: Python ${{ steps.process.outputs.VERSION }}
+          body: |
+            ### 📝 Description
 
-          Python ${{ steps.process.outputs.VERSION }} Installer ([Official release page](https://www.python.org/downloads/release/python-${{ steps.process.outputs.VERSION_SLUG }}/))
+            Python ${{ steps.process.outputs.VERSION }} Installer ([Official release page](https://www.python.org/downloads/release/python-${{ steps.process.outputs.VERSION_SLUG }}/))
 
-          ### 🛡 [VirusTotal GitHub Action](https://github.com/crazy-max/ghaction-virustotal) analysis
+            ### 🛡 [VirusTotal GitHub Action](https://github.com/crazy-max/ghaction-virustotal) analysis
 
-          - [`python-${{ steps.process.outputs.VERSION }}-amd64.exe`](${{ steps.analysis-url.outputs.url }})
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ matrix.version }}/amd64/python-${{ steps.process.outputs.VERSION }}-amd64.exe
-        asset_name: python-${{ steps.process.outputs.VERSION }}-amd64.exe
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - [`python-${{ steps.process.outputs.VERSION }}-amd64.exe`](${{ steps.analysis-url.outputs.url }})
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.version }}/amd64/python-${{ steps.process.outputs.VERSION }}-amd64.exe
+          asset_name: python-${{ steps.process.outputs.VERSION }}-amd64.exe
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
