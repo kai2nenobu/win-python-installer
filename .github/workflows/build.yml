@@ -40,7 +40,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     needs: build_matrix
-    name: Build ${{ matrix.os }}
+    name: Build ${{ matrix.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -84,9 +84,10 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
   release:
     runs-on: ubuntu-20.04
-    # プルリクエストがマージされたときのみリリースする
+    # Release installer after release PR is merged
     if: |
       github.event_name == 'pull_request'
+      && github.head_ref == 'new_release'
       && github.event.action == 'closed'
       && github.event.pull_request.merged
     needs: [build_matrix, build]
