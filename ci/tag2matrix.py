@@ -25,6 +25,9 @@ class GitHubEvent:
     PR_TITLE: str | None = None
     """Pull Request title for GitHub Actions workflow (github.event.pull_request.title)"""
 
+    TARGET_VERSIONS: str | None = None
+    """Target versions to build on manual workflow (github.event.inputs.target_versions)"""
+
 
 BASE_MATRIX = {
     "3.8": {"os": "windows-2019", "HOST_PYTHON": "3.8"},
@@ -45,6 +48,8 @@ def to_matrix(event: GitHubEvent) -> list[dict]:
             tags = re.sub(r"^.*New release *", "", event.PR_TITLE)
         else:
             tags = ALL_VERSIONS
+    elif event.EVENT_NAME == "workflow_dispatch":
+        tags = event.TARGET_VERSIONS
     else:
         tags = ""
     tag_list = tags.split("/")
@@ -65,7 +70,8 @@ def main() -> None:
     event = GitHubEvent(
         EVENT_NAME=os.getenv("EVENT_NAME"),
         BRANCH_NAME=os.getenv("BRANCH_NAME"),
-        PR_TITLE=os.getenv("PR_TITLE")
+        PR_TITLE=os.getenv("PR_TITLE"),
+        TARGET_VERSIONS=os.getenv("TARGET_VERSIONS")
     )
     print(json.dumps(event))
 
@@ -108,5 +114,15 @@ class Test(unittest.TestCase):
                 {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "main"},
+            ]
+        )
+
+    def test_manual_workflow(self):
+        self.assertSequenceEqual(
+            to_matrix(GitHubEvent(**{"EVENT_NAME": "workflow_dispatch", "BRANCH_NAME": "main", "TARGET_VERSIONS": "3.10/3.8/3.12"})),
+            [
+                {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
+                {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
+                {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
             ]
         )
