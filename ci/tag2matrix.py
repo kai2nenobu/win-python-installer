@@ -76,10 +76,10 @@ if __name__ == "__main__":
 
 
 class Test(unittest.TestCase):
-    def test_schedule_event(self):
-        self.assertSequenceEqual(
-            to_matrix(GitHubEvent(**{"EVENT_NAME": "schedule", "BRANCH_NAME": "main"})),
-            [
+    PARAMETERS = {
+        "schedule_event": {
+            "event": {"EVENT_NAME": "schedule", "BRANCH_NAME": "main"},
+            "expected": [
                 {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
                 {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
@@ -87,22 +87,18 @@ class Test(unittest.TestCase):
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "main"},
             ]
-        )
-
-    def test_release_pr(self):
-        self.assertSequenceEqual(
-            to_matrix(GitHubEvent(**{"EVENT_NAME": "pull_request", "BRANCH_NAME": "new_release", "PR_TITLE": "✨New release v3.10.14/v3.9.19/v3.8.19"})),
-            [
+        },
+        "release_pr": {
+            "event": {"EVENT_NAME": "pull_request", "BRANCH_NAME": "new_release", "PR_TITLE": "✨New release v3.10.14/v3.9.19/v3.8.19"},
+            "expected": [
                 {"version": "v3.10.14", "os": "windows-2019", "branch": "3.10"},
                 {"version": "v3.9.19", "os": "windows-2019", "branch": "3.9"},
                 {"version": "v3.8.19", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
             ]
-        )
-
-    def test_non_release_pr(self):
-        self.assertSequenceEqual(
-            to_matrix(GitHubEvent(**{"EVENT_NAME": "pull_request", "BRANCH_NAME": "feature_branch", "PR_TITLE": "Some feature"})),
-            [
+        },
+        "non_release_pr": {
+            "event": {"EVENT_NAME": "pull_request", "BRANCH_NAME": "feature_branch", "PR_TITLE": "Some feature"},
+            "expected": [
                 {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
                 {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
@@ -110,22 +106,18 @@ class Test(unittest.TestCase):
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "main"},
             ]
-        )
-
-    def test_manual_workflow(self):
-        self.assertSequenceEqual(
-            to_matrix(GitHubEvent(**{"EVENT_NAME": "workflow_dispatch", "BRANCH_NAME": "main", "TARGET_VERSIONS": "3.10/3.8/3.12"})),
-            [
+        },
+        "manual_workflow": {
+            "event": {"EVENT_NAME": "workflow_dispatch", "BRANCH_NAME": "main", "TARGET_VERSIONS": "3.10/3.8/3.12"},
+            "expected": [
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
                 {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
             ]
-        )
-
-    def test_any_other_event(self):
-        self.assertSequenceEqual(
-            to_matrix(GitHubEvent(**{"EVENT_NAME": "push", "BRANCH_NAME": "main"})),
-            [
+        },
+        "any_other_event": {
+            "event": {"EVENT_NAME": "push", "BRANCH_NAME": "main"},
+            "expected": [
                 {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
                 {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
@@ -133,4 +125,13 @@ class Test(unittest.TestCase):
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "main"},
             ]
-        )
+        }
+    }
+
+    def test_events(self):
+        for name, param in Test.PARAMETERS.items():
+            with self.subTest(msg=name, param=param):
+                self.assertSequenceEqual(
+                    to_matrix(GitHubEvent(**param["event"])),
+                    param["expected"]
+                )
