@@ -13,6 +13,7 @@ BASE_MATRIX = {
     "3.8": {"os": "windows-2019", "HOST_PYTHON": "3.8"},
     "3.9": {"os": "windows-2019"},
     "3.10": {"os": "windows-2019"},
+    "3.11": {"os": "windows-2019"},
 }
 
 def to_matrix(tags: str) -> list[dict]:
@@ -39,11 +40,12 @@ if __name__ == "__main__":
 class Test(unittest.TestCase):
     def test_tags(self):
         self.assertSequenceEqual(
-            to_matrix("v3.10.14/v3.9.19/v3.8.19"),
+            to_matrix("v3.10.14/v3.9.19/v3.8.19/v3.11.10"),
             [
                 {"tag": "v3.10.14", "os": "windows-2019"},
                 {"tag": "v3.9.19", "os": "windows-2019"},
                 {"tag": "v3.8.19", "os": "windows-2019", "HOST_PYTHON": "3.8"},
+                {"tag": "v3.11.10", "os": "windows-2019"},
             ]
         )
 
