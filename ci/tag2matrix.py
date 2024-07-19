@@ -51,7 +51,7 @@ def to_matrix(event: GitHubEvent) -> list[dict]:
     elif event.EVENT_NAME == "workflow_dispatch":
         tags = event.TARGET_VERSIONS
     else:
-        tags = ""
+        tags = ALL_VERSIONS
     tag_list = tags.split("/")
 
     def convert(tag: str) -> dict:
@@ -124,5 +124,18 @@ class Test(unittest.TestCase):
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
                 {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
+            ]
+        )
+
+    def test_any_other_event(self):
+        self.assertSequenceEqual(
+            to_matrix(GitHubEvent(**{"EVENT_NAME": "push", "BRANCH_NAME": "main"})),
+            [
+                {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
+                {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
+                {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
+                {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
+                {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
+                {"version": "3.13", "os": "windows-2022", "branch": "main"},
             ]
         )
