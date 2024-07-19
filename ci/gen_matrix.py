@@ -68,7 +68,7 @@ def main() -> None:
         PR_TITLE=os.getenv("PR_TITLE"),
         TARGET_VERSIONS=os.getenv("TARGET_VERSIONS")
     )
-    print(json.dumps(event))
+    print(json.dumps(to_matrix(event)))
 
 
 if __name__ == "__main__":
