@@ -35,7 +35,8 @@ BASE_MATRIX = {
     "3.10": {"os": "windows-2019"},
     "3.11": {"os": "windows-2019"},
     "3.12": {"os": "windows-2019"},
-    "3.13": {"os": "windows-2022", "branch": "main"},
+    "3.13": {"os": "windows-2022"},
+    "3.14": {"os": "windows-2022", "branch": "main"},
 }
 ALL_VERSIONS = "/".join(BASE_MATRIX.keys())
 
@@ -85,7 +86,8 @@ class Test(unittest.TestCase):
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
                 {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
-                {"version": "3.13", "os": "windows-2022", "branch": "main"},
+                {"version": "3.13", "os": "windows-2022", "branch": "3.13"},
+                {"version": "3.14", "os": "windows-2022", "branch": "main"},
             ]
         },
         "release_pr": {
@@ -104,7 +106,8 @@ class Test(unittest.TestCase):
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
                 {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
-                {"version": "3.13", "os": "windows-2022", "branch": "main"},
+                {"version": "3.13", "os": "windows-2022", "branch": "3.13"},
+                {"version": "3.14", "os": "windows-2022", "branch": "main"},
             ]
         },
         "manual_workflow": {
@@ -123,7 +126,8 @@ class Test(unittest.TestCase):
                 {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
                 {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
                 {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
-                {"version": "3.13", "os": "windows-2022", "branch": "main"},
+                {"version": "3.13", "os": "windows-2022", "branch": "3.13"},
+                {"version": "3.14", "os": "windows-2022", "branch": "main"},
             ]
         }
     }
