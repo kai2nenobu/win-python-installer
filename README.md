@@ -17,10 +17,10 @@
 
 | バージョン | 最新リリース                                                                      | リリース日 | End of Life |
 |------------|-----------------------------------------------------------------------------------|------------|-------------|
-|       3.11 | Not yet released                                                                  |            |             |
-|       3.10 | [3.10.14](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.10.14) | 2024-03-19 |             |
-|        3.9 | [3.9.19](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.9.19) | 2024-03-19 |             |
-|        3.8 | [3.8.19](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.8.19) | 2024-03-19 |             |
+|       3.11 | [3.11.10](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.11.10) | 2024-09-07 |             |
+|       3.10 | [3.10.15](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.10.15) | 2024-09-07 |             |
+|        3.9 | [3.9.20](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.9.20) | 2024-09-06 |             |
+|        3.8 | [3.8.20](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.8.20) | 2024-09-06 |             |
 |        3.7 | [3.7.17](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.7.17) | 2023-06-05 | ✓           |
 |        3.6 | [3.6.15](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.6.15) | 2021-09-04 | ✓           |
 
