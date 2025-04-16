@@ -22,7 +22,7 @@ on:
         default: false
 jobs:
   build_matrix:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       BUILD_MATRIX: ${{ steps.gen_matrix.outputs.BUILD_MATRIX }}
     steps:
@@ -83,7 +83,7 @@ jobs:
           limit-access-to-actor: true
         if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     # Release installer after release PR is merged
     if: |
       github.event_name == 'pull_request'
