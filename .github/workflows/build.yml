@@ -26,7 +26,7 @@ jobs:
     outputs:
       BUILD_MATRIX: ${{ steps.gen_matrix.outputs.BUILD_MATRIX }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Generate build matrix
         id: gen_matrix
         run: |
@@ -51,10 +51,10 @@ jobs:
         #   branch: branch name to build
         #   HOST_PYTHON: python version used on build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Show env
         run: cmd /c set
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
         # Use a specific version as HOST_PYTHON
         name: Use Python ${{ matrix.HOST_PYTHON }} as HOST_PYTHON
         id: host_python
@@ -72,13 +72,13 @@ jobs:
           Get-ChildItem -R 'dist'
           $count = (Get-ChildItem -ea Stop 'dist/**/python-*-amd64.exe').Count
           if ($count -eq 0) { Write-Error -ea Stop 'Build for installer failed!' }
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ matrix.version }}
           path: |
             dist/**/python-*-amd64.exe
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+        uses: mxschmitt/action-tmate@e5c7151931ca95bad1c6f4190c730ecf8c7dde48 # v3.19
         with:
           limit-access-to-actor: true
         if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
@@ -102,13 +102,13 @@ jobs:
           tag=${{ matrix.version }}
           echo "VERSION=${tag#v}" >> "$GITHUB_OUTPUT"
           echo "VERSION_SLUG=$(echo $tag | grep -o '[0-9]' | tr -d '\n')" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
       - name: Show downloaded artifacts
         run: ls -AlR ${{ matrix.version }}
       - name: VirusTotal scan
         id: virustotal
-        uses: crazy-max/ghaction-virustotal@v4
+        uses: crazy-max/ghaction-virustotal@d34968c958ae283fe976efed637081b9f9dcf74f # v4.2.0
         with:
           vt_api_key: ${{ secrets.VT_API_KEY }}
           files: |
@@ -124,7 +124,7 @@ jobs:
           git push --tags
       - name: Create release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1.1.4
         with:
           tag_name: ${{ matrix.version }}
           release_name: Python ${{ steps.process.outputs.VERSION }}
@@ -142,7 +142,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5 # v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ matrix.version }}/amd64/python-${{ steps.process.outputs.VERSION }}-amd64.exe
