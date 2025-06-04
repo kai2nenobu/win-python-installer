@@ -125,8 +125,11 @@ jobs:
       - name: Get VirusTotal analysis URL
         id: analysis-url
         run: |
-          url=$(echo '${{ steps.virustotal.outputs.analysis }}' | grep -o 'http.*$')
+          url=$(echo "$VIRUSTOTAL_ANALYSIS" | grep -o 'http.*$')
           echo "url=$url" >> "$GITHUB_OUTPUT"
+        env:
+          # Analysis results formatted as "<filename>=<analysisURL>" (comma separated)
+          VIRUSTOTAL_ANALYSIS: ${{ steps.virustotal.outputs.analysis }}
       - name: Create tag
         run: |
           git tag "${{ matrix.version }}"
