@@ -81,10 +81,10 @@ class Test(unittest.TestCase):
         "schedule_event": {
             "event": {"EVENT_NAME": "schedule", "BRANCH_NAME": "main"},
             "expected": [
-                {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
-                {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
-                {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
-                {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
+                {"version": "3.9", "os": "windows-2022", "branch": "3.9"},
+                {"version": "3.10", "os": "windows-2022", "branch": "3.10"},
+                {"version": "3.11", "os": "windows-2022", "branch": "3.11"},
+                {"version": "3.12", "os": "windows-2022", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "3.13"},
                 {"version": "3.14", "os": "windows-2022", "branch": "main"},
             ]
@@ -92,18 +92,18 @@ class Test(unittest.TestCase):
         "release_pr": {
             "event": {"EVENT_NAME": "pull_request", "BRANCH_NAME": "new_release", "PR_TITLE": "✨New release v3.10.14/v3.9.19/v3.8.19"},
             "expected": [
-                {"version": "v3.10.14", "os": "windows-2019", "branch": "v3.10.14"},
-                {"version": "v3.9.19", "os": "windows-2019", "branch": "v3.9.19"},
+                {"version": "v3.10.14", "os": "windows-2022", "branch": "v3.10.14"},
+                {"version": "v3.9.19", "os": "windows-2022", "branch": "v3.9.19"},
                 {"version": "v3.8.19", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "v3.8.19"},
             ]
         },
         "non_release_pr": {
             "event": {"EVENT_NAME": "pull_request", "BRANCH_NAME": "feature_branch", "PR_TITLE": "Some feature"},
             "expected": [
-                {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
-                {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
-                {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
-                {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
+                {"version": "3.9", "os": "windows-2022", "branch": "3.9"},
+                {"version": "3.10", "os": "windows-2022", "branch": "3.10"},
+                {"version": "3.11", "os": "windows-2022", "branch": "3.11"},
+                {"version": "3.12", "os": "windows-2022", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "3.13"},
                 {"version": "3.14", "os": "windows-2022", "branch": "main"},
             ]
@@ -111,18 +111,18 @@ class Test(unittest.TestCase):
         "manual_workflow": {
             "event": {"EVENT_NAME": "workflow_dispatch", "BRANCH_NAME": "main", "TARGET_VERSIONS": "3.10/3.8/3.12"},
             "expected": [
-                {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
+                {"version": "3.10", "os": "windows-2022", "branch": "3.10"},
                 {"version": "3.8", "os": "windows-2019", "HOST_PYTHON": "3.8", "branch": "3.8"},
-                {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
+                {"version": "3.12", "os": "windows-2022", "branch": "3.12"},
             ]
         },
         "any_other_event": {
             "event": {"EVENT_NAME": "push", "BRANCH_NAME": "main"},
             "expected": [
-                {"version": "3.9", "os": "windows-2019", "branch": "3.9"},
-                {"version": "3.10", "os": "windows-2019", "branch": "3.10"},
-                {"version": "3.11", "os": "windows-2019", "branch": "3.11"},
-                {"version": "3.12", "os": "windows-2019", "branch": "3.12"},
+                {"version": "3.9", "os": "windows-2022", "branch": "3.9"},
+                {"version": "3.10", "os": "windows-2022", "branch": "3.10"},
+                {"version": "3.11", "os": "windows-2022", "branch": "3.11"},
+                {"version": "3.12", "os": "windows-2022", "branch": "3.12"},
                 {"version": "3.13", "os": "windows-2022", "branch": "3.13"},
                 {"version": "3.14", "os": "windows-2022", "branch": "main"},
             ]
