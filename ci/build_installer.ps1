@@ -43,6 +43,22 @@ if ($Ref -match '^v?3\.7') {
   Pop-Location
 }
 
+# Install visual studio components for MSVC v140 on version 3.9
+if ($Ref -match '^v?3\.9') {
+  # https://github.com/actions/runner-images/issues/9701
+  'Install visual studio components for MSVC v140'
+  $InstallerPath = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
+  $InstallPath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
+  $componentsToRemove= @(
+    'Microsoft.VisualStudio.Component.VC.140' # MSVC v140 - VS 2015 C++ build tools (v14.00)
+  )
+  [string]$workloadArgs = $componentsToRemove | ForEach-Object {" --add " +  $_}
+  $Arguments = ('/c', "`"$InstallerPath`"", 'modify', '--installPath', "`"$InstallPath`"",$workloadArgs, '--quiet', '--norestart', '--nocache')
+  # should be run twice
+  $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+  $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+}
+
 # Build installer
 cmd /c cpython\Tools\msi\buildrelease.bat @BuildOptions
 if ($LASTEXITCODE -gt 0) { exit $LASTEXITCODE }
