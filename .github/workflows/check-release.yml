@@ -8,27 +8,33 @@ on:
 jobs:
   check-release:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    timeout-minutes: 3
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         fetch-depth: 0  # Fetch all history
+        persist-credentials: false
     - name: Check new tags
       id: check_new_tags
       run: |
         new_tags=$(python3 ci/check_new_tags.py)
         echo "new_tags=${new_tags}" >> "$GITHUB_OUTPUT"
     - name: Generate token # to trigger other workflows when this workflow creates a PR
-      id: generate_token
+      id: app_token
       if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
-      uses: tibdex/github-app-token@v2
+      uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
       with:
-        app_id: ${{ secrets.TRIGGER_APP_ID }}
-        private_key: ${{ secrets.TRIGGER_APP_PRIVATE_KEY }}
+        app-id: ${{ secrets.TRIGGER_APP_ID }}
+        private-key: ${{ secrets.TRIGGER_APP_PRIVATE_KEY }}
+        permission-pull-requests: write
     - name: Create a pull request if new tags are found
       if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
       with:
-        token: ${{ steps.generate_token.outputs.token }}
+        token: ${{ steps.app_token.outputs.token }}
         branch: new_release
         delete-branch: true
         commit-message: Update latest releases for ${{ steps.check_new_tags.outputs.new_tags }}
