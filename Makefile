@@ -37,3 +37,6 @@ ghqlint: ## Lint by ghqlint
 
 zizmor: ## Lint by zizmor
 	@zizmor .github/workflows/
+
+test:
+	@python -m unittest -v ci/gen_matrix.py
