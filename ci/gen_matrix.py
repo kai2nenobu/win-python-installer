@@ -31,10 +31,10 @@ class GitHubEvent:
 
 BASE_MATRIX = {
     "3.8": {"os": "windows-2019", "HOST_PYTHON": "3.8"},
-    "3.9": {"os": "windows-2019"},
-    "3.10": {"os": "windows-2019"},
-    "3.11": {"os": "windows-2019"},
-    "3.12": {"os": "windows-2019"},
+    "3.9": {"os": "windows-2022"},
+    "3.10": {"os": "windows-2022"},
+    "3.11": {"os": "windows-2022"},
+    "3.12": {"os": "windows-2022"},
     "3.13": {"os": "windows-2022"},
     "3.14": {"os": "windows-2022", "branch": "main"},
 }
