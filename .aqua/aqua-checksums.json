@@ -1,0 +1,134 @@
+{
+  "checksums": [
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_darwin_amd64.tar.gz",
+      "checksum": "28E5DE5A05FC558474F638323D736D822FFF183D2D492F0AECB2B73CC44584F5",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_darwin_arm64.tar.gz",
+      "checksum": "2693315B9093AEACB4EBD91A993FEA54FC215057BF0DA2659056B4BC033873DB",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz",
+      "checksum": "023070A287CD8CCCD71515FEDC843F1985BF96C436B7EFFAECCE67290E7E0757",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_linux_arm64.tar.gz",
+      "checksum": "401942F9C24ED71E4FE71B76C7D638F66D8633575C4016EFD2977CE7C28317D0",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_windows_amd64.zip",
+      "checksum": "7F12F1801BCA3D480D67AAF7774F4C2A6359A3CA8EEBE382C95C10C9704AA731",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/rhysd/actionlint/v1.7.7/actionlint_1.7.7_windows_arm64.zip",
+      "checksum": "76E9514CFAC18E5677AA04F3A89873C981F16A2F2353BB97372A86CD09B1F5A8",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v1.4.1/ghalint_1.4.1_darwin_amd64.tar.gz",
+      "checksum": "AD0D5893D9A4B38F6F8D35DC003A2BEEA63FA2EA48FF91DDD301773AB5711B21",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v1.4.1/ghalint_1.4.1_darwin_arm64.tar.gz",
+      "checksum": "70DC52A85C207FCB40F1CDBA5F097CCEF7564C5D217E48C60541743CFC15239B",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v1.4.1/ghalint_1.4.1_linux_amd64.tar.gz",
+      "checksum": "6A8EAA2568FA1FED64D63CCDD4538C3E329B873A7D78F49D207E9FA2FA6A65BB",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v1.4.1/ghalint_1.4.1_linux_arm64.tar.gz",
+      "checksum": "1417F9B7CE201C69A959BD5E7DA56BFE4128D8C5333EEDB94038B731CA30A12C",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v1.4.1/ghalint_1.4.1_windows_amd64.zip",
+      "checksum": "3C1EB280BDE931AD793A732B32C802D54C6DF418502A55393D9DC8573282259E",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v1.4.1/ghalint_1.4.1_windows_arm64.zip",
+      "checksum": "0802008325A617634398E0D73BB240F75551B4859769D045E6A91ECC9D85B1AE",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.1.2/pinact_darwin_amd64.tar.gz",
+      "checksum": "BCCA1DC1F0FAB2AA4FA0F17A0E4092C0F1661C802B6F5857BBE1F803D927D3B5",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.1.2/pinact_darwin_arm64.tar.gz",
+      "checksum": "8DAE815BE50D0FB5832C27F9564BCA2B91653B045EBD165C881AB95D8BF2DF4C",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.1.2/pinact_linux_amd64.tar.gz",
+      "checksum": "527800D3EA35AEC5CFF601CB014C01EB42C6098A269B05D8937025EC121F1B77",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.1.2/pinact_linux_arm64.tar.gz",
+      "checksum": "73D5B05E54680A936ACEFABC5C98CA42C0BC282D83BEB4ECD879904FD580ACF9",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.1.2/pinact_windows_amd64.zip",
+      "checksum": "892F930B0EDE87A86E0B728BC4A0F53C26AC9BB3BD3FF78E06A4F3CB28134FE2",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/suzuki-shunsuke/pinact/v3.1.2/pinact_windows_arm64.zip",
+      "checksum": "9CE33159DAC283057BC0EFFC12D58BF993D0139EE9895C96D07D77224AE217AD",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/takumin/zizmor-bin/v1.8.0/zizmor-aarch64-apple-darwin",
+      "checksum": "53EB8636B71FFE5842276D59D9E514677C0CFE65F68C2DDE5A9BD384AB081519",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/takumin/zizmor-bin/v1.8.0/zizmor-aarch64-pc-windows-gnullvm.exe",
+      "checksum": "75D7560F79F2082A5EBE1AB2183C75D9C06876ADE5A5201DAD84546D4ABB2F1A",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/takumin/zizmor-bin/v1.8.0/zizmor-aarch64-unknown-linux-musl",
+      "checksum": "BD2B94DB9250894F6AB1B1170A88C54BB14390165E94265C118E2C81C99101DA",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/takumin/zizmor-bin/v1.8.0/zizmor-x86_64-apple-darwin",
+      "checksum": "AA770FE1F2FDD96DAFAB15E03A3A2F966AA30F1A3C9A071EA73B6DF04824E3AE",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/takumin/zizmor-bin/v1.8.0/zizmor-x86_64-pc-windows-gnullvm.exe",
+      "checksum": "633213BF59C809AD206A161A37BA5CC24F77AC4DDFE06122824D99575869A530",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/takumin/zizmor-bin/v1.8.0/zizmor-x86_64-unknown-linux-musl",
+      "checksum": "B26FF811256864A3BC7CD554D2839DC9D30A578B98612BF487993DC43C91EC54",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.375.0/registry.yaml",
+      "checksum": "E0EE2ADCF6C53C42494A053D593A6A7C4AF968C1F5F5C39031719CFDFC2930A3",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.377.0/registry.yaml",
+      "checksum": "35E6916821352C8E73A3A0394D86528F44012D1EC08B6CD690CF114CECA4F88F",
+      "algorithm": "sha256"
+    }
+  ]
+}
