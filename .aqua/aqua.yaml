@@ -18,3 +18,4 @@ packages:
 - name: suzuki-shunsuke/ghalint@v1.4.1
 - name: rhysd/actionlint@v1.7.7
 - name: takumin/zizmor-bin@v1.8.0
+- name: koalaman/shellcheck@v0.10.0
