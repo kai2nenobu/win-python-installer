@@ -83,6 +83,9 @@ jobs:
         #   version: version name to build
         #   branch: branch name to build
         #   HOST_PYTHON: python version used on build
+    defaults:
+      run:
+        shell: pwsh # Tell actionlint not to perform checks with shellcheck
     permissions:
       contents: read
     timeout-minutes: 60
