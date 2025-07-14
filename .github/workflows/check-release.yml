@@ -29,6 +29,7 @@ jobs:
       with:
         app-id: ${{ secrets.TRIGGER_APP_ID }}
         private-key: ${{ secrets.TRIGGER_APP_PRIVATE_KEY }}
+        permission-contents: write
         permission-pull-requests: write
     - name: Create a pull request if new tags are found
       if: ${{ steps.check_new_tags.outputs.new_tags != '' }}
