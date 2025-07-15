@@ -17,7 +17,7 @@
 
 | バージョン | 最新リリース                                                                      | リリース日 | End of Life |
 |------------|-----------------------------------------------------------------------------------|------------|-------------|
-|       3.12 |  | Not yet |             |
+|       3.12 | [3.12.11](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.12.11) | 2025-06-03 |             |
 |       3.11 | [3.11.13](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.11.13) | 2025-06-03 |             |
 |       3.10 | [3.10.18](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.10.18) | 2025-06-03 |             |
 |        3.9 | [3.9.23](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.9.23) | 2025-06-03 |             |
