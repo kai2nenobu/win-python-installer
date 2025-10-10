@@ -20,7 +20,7 @@
 |       3.12 | [3.12.12](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.12.12) | 2025-10-09 |             |
 |       3.11 | [3.11.14](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.11.14) | 2025-10-09 |             |
 |       3.10 | [3.10.19](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.10.19) | 2025-10-09 |             |
-|        3.9 | [3.9.24](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.9.24) | 2025-10-09 |             |
+|        3.9 | [3.9.24](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.9.24) | 2025-10-09 | ✓           |
 |        3.8 | [3.8.20](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.8.20) | 2024-09-06 | ✓           |
 |        3.7 | [3.7.17](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.7.17) | 2023-06-05 | ✓           |
 |        3.6 | [3.6.15](https://github.com/kai2nenobu/win-python-installer/releases/tag/v3.6.15) | 2021-09-04 | ✓           |
