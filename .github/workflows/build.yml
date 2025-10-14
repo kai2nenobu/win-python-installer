@@ -33,7 +33,7 @@ jobs:
       - name: Setup aqua
         uses: aquaproj/aqua-installer@ea518c135a02fc11ff8024364510c181a5c6b342 # v4.0.3
         with:
-          aqua_version: v2.53.1
+          aqua_version: v2.55.0
           aqua_opts: "" # eager install
       - name: Lint
         run: make lint

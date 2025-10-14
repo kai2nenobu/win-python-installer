@@ -9,13 +9,13 @@
 #   - all
 registries:
 - type: standard
-  ref: v4.386.0 # renovate: depName=aquaproj/aqua-registry
+  ref: v4.426.0 # renovate: depName=aquaproj/aqua-registry
 checksum:
   enabled: true
   require_checksum: true
 packages:
-- name: suzuki-shunsuke/pinact@v3.3.0
-- name: suzuki-shunsuke/ghalint@v1.5.1
+- name: suzuki-shunsuke/pinact@v3.4.2
+- name: suzuki-shunsuke/ghalint@v1.5.3
 - name: rhysd/actionlint@v1.7.7
-- name: takumin/zizmor-bin@v1.8.0
-- name: koalaman/shellcheck@v0.10.0
+- name: zizmorcore/zizmor@v1.14.2
+- name: koalaman/shellcheck@v0.11.0
