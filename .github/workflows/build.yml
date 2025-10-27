@@ -122,7 +122,7 @@ jobs:
           path: |
             dist/**/python-*-amd64.exe
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate@7b6a61a73bbb9793cb80ad69b8dd8ac19261834c # v3.22
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101 # v3.23
         with:
           limit-access-to-actor: true
         if: github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure()
